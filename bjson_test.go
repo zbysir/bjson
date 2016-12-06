@@ -14,11 +14,11 @@ func TestBjson_MapString(t *testing.T) {
 
 	log.Print("ms: ", ms)
 	log.Print("mi: ", mi)
-	log.Printf("name: %s", bj.Pos("name").String())
-	log.Printf("age: %d,%s", bj.Pos("age").Int(), bj.Pos("age").String())
-	log.Printf("sex: %t,%d", bj.Pos("sex").Bool(), bj.Pos("sex").Int())
-	log.Printf("hab: %s", bj.Pos("data").Pos("hab").String())
+	log.Printf("name: %s", bj.Pos("name").String()) //bysir
+	log.Printf("age: %d,%s", bj.Pos("age").Int(), bj.Pos("age").String()) // 21,21
+	log.Printf("sex: %t,%d", bj.Pos("sex").Bool(), bj.Pos("sex").Int()) // true,1
+	log.Printf("hab: %s", bj.Pos("data").Pos("hab").String()) // code
 
-	log.Printf("E name: %d", bj.Pos("name").Int())
+	log.Printf("E name: %d", bj.Pos("name").Int()) // 0
 
 }
