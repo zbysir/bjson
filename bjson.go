@@ -92,7 +92,7 @@ func (p *Bjson) Float() float64 {
 	return i
 }
 
-func (p *Bjson)Pos(key string) *Bjson {
+func (p *Bjson) Pos(key string) *Bjson {
 	if p.self == nil {
 		return p
 	}
@@ -104,6 +104,55 @@ func (p *Bjson)Pos(key string) *Bjson {
 		return &b
 	} else {
 		return p
+	}
+}
+
+func (p *Bjson) Index(index int) *Bjson {
+	if p.self == nil {
+		return p
+	}
+
+	if i, ok := p.self.([]interface{}); ok {
+		b := Bjson{
+			self:i[index],
+		}
+		return &b
+	} else {
+		return p
+	}
+}
+
+func (p *Bjson) IsObj() bool {
+	if p.self == nil {
+		return false
+	}
+
+	_, ok := p.self.(map[string]interface{})
+	return ok
+}
+
+func (p *Bjson) IsNil() bool {
+	return p.self == nil
+}
+
+func (p *Bjson) IsArr() bool {
+	if p.self == nil {
+		return false
+	}
+
+	_, ok := p.self.([]interface{})
+	return ok
+}
+
+func (p *Bjson) Len() int {
+	if p.self == nil {
+		return 0
+	}
+
+	if i, ok := p.self.([]interface{}); ok {
+		return len(i)
+	} else {
+		return 0
 	}
 }
 
