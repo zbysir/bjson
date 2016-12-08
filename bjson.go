@@ -3,8 +3,6 @@ package bjson
 import (
 	"encoding/json"
 	"strconv"
-	"reflect"
-	"log"
 	"strings"
 )
 
@@ -97,13 +95,12 @@ func (p *Bjson) Pos(key string) *Bjson {
 		return p
 	}
 
+	b := Bjson{}
 	if i, ok := p.self.(map[string]interface{}); ok {
-		b := Bjson{
-			self:i[key],
-		}
+		b.self = i[key]
 		return &b
 	} else {
-		return p
+		return &b
 	}
 }
 
@@ -111,14 +108,12 @@ func (p *Bjson) Index(index int) *Bjson {
 	if p.self == nil {
 		return p
 	}
-
+	b := Bjson{}
 	if i, ok := p.self.([]interface{}); ok {
-		b := Bjson{
-			self:i[index],
-		}
+		b.self = i[index]
 		return &b
 	} else {
-		return p
+		return &b
 	}
 }
 
@@ -177,8 +172,6 @@ func interface2String(value interface{}) (string, bool) {
 		return strconv.FormatFloat(float64(value.(float32)), 'f', -1, 64), true
 	case bool:
 		return strconv.FormatBool(value.(bool)), true
-	case map[string]interface{}:
-		return "", true
 	}
 	return "", false
 }
@@ -188,10 +181,7 @@ func mapInterface2MapString(m map[string]interface{}) map[string]string {
 
 	for key, value := range m {
 		v, ok := interface2String(value)
-		if !ok {
-			// debug
-			log.Print(key + " is not cased!: " + reflect.TypeOf(value).String())
-		} else {
+		if ok {
 			set[key] = v
 		}
 	}
