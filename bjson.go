@@ -4,15 +4,18 @@ import (
 	"encoding/json"
 	"strconv"
 	"strings"
+	"errors"
+	"github.com/bysir-zl/bygo/util"
 )
 
+// use bjson.New to created it
 type Bjson struct {
 	self interface{}
 }
 
 func New(data []byte) (*Bjson, error) {
 	b := Bjson{
-		self:0,
+		self: 0,
 	}
 	err := json.Unmarshal(data, &b.self)
 	if err != nil {
@@ -35,12 +38,45 @@ func (p *Bjson) Interface() interface{} {
 	return p.self
 }
 
+func (p *Bjson) Object(v interface{}) error {
+	if p.IsNil() {
+		return errors.New("self is Nil")
+	} else if p.IsArr() {
+		info := util.MapListToObjList(v, p.MapInterfaceSlilce(), "json")
+		if info != "" {
+			return errors.New(info)
+		}
+	} else {
+		_, info := util.MapToObj(v, p.MapInterface(), "json")
+		if info != "" {
+			return errors.New(info)
+		}
+	}
+	return nil
+}
+
 func (p *Bjson) MapInterface() map[string]interface{} {
 	if p.self == nil {
 		return nil
 	}
 	if i, ok := p.self.(map[string]interface{}); ok {
 		return i
+	}
+	return nil
+}
+
+func (p *Bjson) MapInterfaceSlilce() []map[string]interface{} {
+	if p.self == nil {
+		return nil
+	}
+	if i, ok := p.self.([]interface{}); ok {
+		temp:=[]map[string]interface{}{}
+		for _,v:=range i{
+			if o,ok:=v.(map[string]interface{});ok{
+				temp = append(temp,o)
+			}
+		}
+		return temp
 	}
 	return nil
 }

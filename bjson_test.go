@@ -1,9 +1,10 @@
 package bjson
 
 import (
-	"testing"
-	"log"
 	"encoding/json"
+	"log"
+	"testing"
+	"reflect"
 )
 
 func TestBjson_MapString(t *testing.T) {
@@ -22,12 +23,13 @@ func TestBjson_MapString(t *testing.T) {
 }
 
 func TestJson(t *testing.T) {
-	bs := []byte(`{"name":"bysir","sex":1,"age":21,"data":[{"hab":"code"}]}`)
+	bs := []byte(`{"name":null,"sex":1,"age":21,"data":[{"hab":"code"}]}`)
 	var x interface{}
 	x = 1
 	json.Unmarshal(bs, &x)
-	arr := x.(map[string]interface{})["data"].([]interface{})
 
-	log.Print(arr)
+	name := x.(map[string]interface{})["name"]
+
+	log.Print(reflect.ValueOf(name).IsValid())
 
 }
